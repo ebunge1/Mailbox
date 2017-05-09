@@ -1,0 +1,60 @@
+table{
+  border-collapse: collapse;
+  text-align:center;
+  width: 100%;
+  margin-bottom: 20px;
+}
+button{
+  background-color: #902020;
+  height: wrap;
+  width: wrap;
+  font-size: 14px;
+}
+input, select{
+  margin-right: 10px;
+}
+#map {
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  width:700px;
+  height:400px;
+}
+#updateform {
+  visibility: hidden;
+  margin-top: 60px;
+}
+#honorific {
+  checked: false;
+}
+#byphone {
+  checked: false;
+}
+#bymail {
+  checked: false;
+}
+#byemail {
+  checked: false;
+}
+#resubmit{
+  float: left;
+}
+input{
+  background-color: lightgrey;
+}
+body {
+  padding-left: 20px;
+  padding-right: 20px;
+  font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: #c04040;
+}
+.title {
+  margin-bottom: 50px;
+}
+.footer {
+  clear:both;
+  margin-top: 200px;
+  width: 100%;
+  text-align:center;
+  color: #00B7FF;
+}

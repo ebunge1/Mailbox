@@ -1,0 +1,65 @@
+doctype html
+html
+  head
+    title Mail Form
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    .title
+      h1 Mail Form
+      p Please fill out the form below
+    .form
+      form(action="mailer", method="post")
+        input( type="radio", name="honorific", value="Mr.")
+        |Mr. 
+        input( type="radio", name="honorific" value="Mrs.")
+        |Mrs. 
+        input( type="radio", name="honorific", value="Ms.")
+        |Ms. 
+        input( type="radio", name="honorific", value="Dr.")
+        |Dr. 
+        br
+        br
+        |First Name: 
+        input( type="text", name="first", required)
+        |Last Name: 
+        input( type="text", name="last", required)
+        br
+        br
+        |Street: 
+        input( type="text", name="street", required)
+        |City: 
+        input( type="text", name="city", required)
+        br
+        br
+        |State: 
+        select( name="state")
+          option( value="NJ") NJ
+          option( value="NY") NY
+          option( value="PA") PA
+          option( value="CT") CT
+        |Zip: 
+        input( type="text", name="zip")
+        br
+        br
+        |Phone: 
+        input( type="text", name="phone")
+        br
+        br
+        |Email: 
+        input( type="text", name="email")
+        br
+        br
+        |How may we contact you?   
+        input( type="checkbox", name="byphone", value="yes")
+        |Phone 
+        input( type="checkbox", name="bymail", value="yes")
+        |Mail 
+        input( type="checkbox", name="byemail", value="yes")
+        |Email 
+        input( type="checkbox", name="byany", value="yes", checked="checked")
+        |Any 
+        br
+        br
+        button( type="submit") Submit
+    .footer
+      a(href="/contacts") Contacts Page

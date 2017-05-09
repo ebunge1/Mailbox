@@ -1,0 +1,181 @@
+doctype html
+html
+  head
+    title Contact Page
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script(src="http://code.jquery.com/jquery-1.11.0.min.js")
+    script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6dyU46yRBPJ_GvSKwIKdiSuY2wvWayas&callback=initMap" defer )
+  body
+    .title
+      h1 Contacts
+    form(action="mailer", method="get")
+      button(type="submit") Create new contact
+    br
+    .table
+      table
+        thead
+          tr
+            th Name
+            th Address
+            th Phone
+            th Email
+            th Contact by:
+            th Mail
+            th Phone
+            th Email
+        tbody
+          each contact in contactlist
+            tr(id="#{contact._id}" style="cursor: pointer" onclick="centerMap({ lat:#{contact.latitude}, lng:#{contact.longitude} })")
+              td #{contact.honorific} #{contact.first} #{contact.last}  
+              td #{contact.street}, #{contact.city}, #{contact.state}  #{contact.zip}  
+              td #{contact.phone} 
+              td #{contact.email}  
+              td
+              if contact.byphone == "yes" || contact.byany == "yes"
+                td Yes 
+              else 
+                td No 
+              if contact.bymail == "yes" || contact.byany == "yes" 
+                td Yes 
+              else
+                td No 
+              if contact.byemail == "yes" || contact.byany == "yes" 
+                td Yes 
+              else 
+                td No 
+              td(style="border-style:none") 
+                button( type="button", onclick="update('#{contact._id}')") Update
+                form(action="contacts", method="post")
+                  input(type="text", name="objectid", value="#{contact._id}", hidden)
+                  input(type="text", name="command", value="delete", hidden)
+                  button(type="submit") Delete
+              td(class="coordinates", hidden) #{contact.latitude} #{contact.longitude} 
+    
+    #resubmit
+      form(id="updateform", action="contacts", method="post" )
+        input( id="contactid", type="text", name="contactid" hidden)
+        input( id="Mr.", type="radio", name="honorific", value="Mr.")
+        |Mr. 
+        input( id="Mrs.", type="radio", name="honorific" value="Mrs.")
+        |Mrs. 
+        input( id="Ms.", type="radio", name="honorific", value="Ms.")
+        |Ms. 
+        input( id="Dr.", type="radio", name="honorific", value="Dr.")
+        |Dr. 
+        br
+        |First Name:
+        input( id="first", type="text", name="first", required)
+        |Last Name: 
+        input( id="last", type="text", name="last", required)
+        br
+        |Street: 
+        input( id="street", type="text", name="street")
+        |City: 
+        input( id="city", type="text", name="city")
+        br
+        |State: 
+        select( name="state")
+          option( id="NJ", value="NJ") NJ
+          option( id="NY", value="NY") NY
+          option( id="PA", value="PA") PA
+          option( id="CT", value="CT") CT
+        |Zip: 
+        input( id="zip", type="text", name="zip")
+        br
+        |Phone: 
+        input( id="phone", type="text", name="phone")
+        br
+        |Email: 
+        input( id="email", type="text", name="email")
+        br
+        |How may we contact you?
+        input( id="byphone", type="checkbox", name="byphone", value="yes")
+        |Phone 
+        input( id="bymail", type="checkbox", name="bymail", value="yes")
+        |Mail 
+        input( id="byemail", type="checkbox", name="byemail", value="yes")
+        |Email 
+        input( id="byany", type="checkbox", name="byany", value="yes")
+        |Any 
+        br
+        button( type="submit") Submit
+        button( type="button", onclick="cancel()") Cancel
+    
+    #map
+    
+    script.
+      var map;
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: 42, lng: -75},
+          zoom: 6
+        });
+        setMarkers();
+      }
+      
+      function setMarkers() {
+        var elements = document.getElementsByClassName("coordinates");
+        for (var i = 0; i < elements.length; i++) {
+          var coord = elements[i].innerHTML.split(" ");
+          var LatLng = new google.maps.LatLng(parseFloat(coord[0]), parseFloat(coord[1]));
+          var marker = new google.maps.Marker({
+            map: map,
+            position: LatLng
+          });
+        }
+      }
+      
+      function centerMap(coordinates) {
+        map.setCenter(coordinates);
+        map.setZoom(10);
+      }
+      
+      function update( contactid ){
+        var element = document.getElementById('updateform');
+        element.style.visibility = "visible";
+        element.reset();
+        var table = document.getElementById(contactid);
+        document.getElementById('contactid').value = contactid;
+        var temp = table.childNodes[0].innerHTML.split( /\s+/ );
+        //honorific
+        document.getElementById(temp[0]).checked = 'true';
+        //first name
+        document.getElementById('first').value = temp[1];
+        //last name
+        document.getElementById('last').value = temp[2];
+        temp = table.childNodes[1].innerHTML.split( /\W+/ );
+        //street
+        document.getElementById('street').value = temp[0] + " " + temp[1] + " " + temp[2];
+        //city (may be more than one word)
+        var citystring = "";
+        for (var i = 3; i <= temp.length-4; i++){
+          citystring += " " + temp[i];
+        }
+        document.getElementById('city').value = citystring;
+        //state
+        document.getElementById(temp[temp.length-3]).selected = 'true';
+        //zip
+        document.getElementById('zip').value = temp[temp.length-2];
+        //phone
+        document.getElementById('phone').value = table.childNodes[2].innerHTML;
+        //email
+        document.getElementById('email').value = table.childNodes[3].innerHTML;
+        //contact by
+        //phone
+        if (table.childNodes[5].innerHTML.search("Yes") > -1) {
+          document.getElementById('byphone').checked = 'true';
+        }
+        //mail
+        if (table.childNodes[6].innerHTML.search("Yes") > -1) {
+          document.getElementById('bymail').checked = 'true';
+        }
+        //email
+        if (table.childNodes[7].innerHTML.search("Yes") > -1) {
+          document.getElementById('byemail').checked = 'true';
+        }
+      }
+      
+      function cancel(){
+        var element = document.getElementById('updateform');
+        element.style.visibility = "hidden";
+      }

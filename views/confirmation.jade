@@ -1,0 +1,14 @@
+doctype html
+html
+  head
+    title Confirmation
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+  .title
+    h1 Thank You #{name}!
+    p Your form has been submitted.
+  form(action="mailer", method="get")
+    button(type="submit") Submit a new form
+  br
+  .footer
+    a(href="/contacts") Contacts Page
